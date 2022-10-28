@@ -1,0 +1,27 @@
+version: '3'
+services:
+    jupyter:
+        image: darlon/dask_jupyter:1.0
+        volumes:
+            - ./data:/data
+        ports:
+            - "8888:8888"
+            - "8887:8787"
+    scheduler:
+        image: darlon/dask_scheduler:1.0
+        volumes:
+            - ./data:/data
+        ports:
+            - "8787:8787"
+    worker:
+        image: darlon/dask_worker:1.0
+        volumes:
+            - ./data:/data
+        environment:
+            - SCHEDULER=scheduler:8786
+        depends_on:
+            - "scheduler"
+        deploy:
+            resources:
+                limits:
+                    memory: 1g
